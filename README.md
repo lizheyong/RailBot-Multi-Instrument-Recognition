@@ -1,6 +1,6 @@
 <div align="center">
 
-[English](#substation-instrument-detection-and-recognition) | [中文](#变电站仪表检测与识别)
+[【English】](#substation-instrument-detection-and-recognition) | [【中文】](#变电站仪表检测与识别)
 
 </div>
 
