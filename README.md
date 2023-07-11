@@ -1,3 +1,5 @@
+[English](#english-version) | [中文](#chinese-version)
+
 # 变电站仪表检测与识别
 
 我的部分数据集：
