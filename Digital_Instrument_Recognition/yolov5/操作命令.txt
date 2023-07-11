@@ -1,0 +1,17 @@
+//调用自带的权重文件
+python .\detect.py --source .\data\images --weights .\weight\yolov5n.pt
+
+
+//训练
+python train.py --batch-size 4 --epochs 100 --data data_sample/sampleBase/objectDetection/data.yaml --weights weight\yolov5x6.pt
+
+
+//测试
+python .\detect.py --source ./data_sample/Pointer/test --weights runs/train/exp25/weights/best.pt
+
+//权重文件导出onnx
+python export.py --weights runs/segment.pt --include  onnx
+--dynamic
+
+//权重文件简化
+onnxsim runs/train/exp47/weights/best.onnx oryolov5m.onnx

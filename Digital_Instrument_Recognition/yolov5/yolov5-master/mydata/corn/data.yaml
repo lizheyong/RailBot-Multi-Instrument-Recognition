@@ -1,0 +1,6 @@
+names:
+- corn
+
+nc: 1
+train: ../mydata/corn/train
+val: ../mydata/corn/valid
