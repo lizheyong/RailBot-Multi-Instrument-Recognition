@@ -1,5 +1,107 @@
-[English](#english-version) | [中文](#chinese-version)
+[English](#Substation Instrument Detection and Recognition
+) | [中文](#变电站仪表检测与识别)
 
+# Substation Instrument Detection and Recognition
+
+My partial dataset:
+
+https://lizheyong.com/dataset-substation
+
+## Preprocessing for the Classification of Various Switches and Meters
+
+Preprocessing refers to the direct target recognition of field images. The current solution is to directly identify the category and status of objects such as indicator lights and switches that contain discrete status values. For example, the red indicator light on, red indicator light off, yellow indicator light on, yellow indicator light off are recognized as four different objects. For analog meters, digital meters, and knobs that contain continuous state values, they are identified as separate objects. The candidate box area is then cropped for post-processing and the continuous state is recognized.
+
+The following are test results for extreme conditions such as multi-target panels and abnormal illumination. The last image is a test indicator of the validation set recorded in the training log. When the IOU is 0.5, the AP value can reach 0.996, showing significant recognition results. However, due to the lack of image data and single, overfitting may occur.
+
+![image-20230711160701972](https://github.com/lijinchao98/digital_pred_func/blob/master/img/image-20230711160701972.png)
+
+![image-20230711160836054](https://github.com/lijinchao98/digital_pred_func/blob/master/img/image-20230711160836054.png)
+
+
+## Pointer Recognition
+
+### 1. Yolo detection of key scales, pointer head and tail
+
+#### Process
+
+1. Yolo detects pointer meters in the entire panel.
+2. Classify the meter with a classification network to determine what kind of pointer meter it is.
+3. Train another Yolo to detect the key scales, pointer head, and pointer tail of the pointer meter, and the head and tail get the pointer line.
+4. Estimate the reading according to the angle. Note that the pointer scale may not be uniform.
+
+#### Results
+
+![image-20230711161727835](https://github.com/lijinchao98/digital_pred_func/blob/master/img/image-20230711161727835.png)
+
+![image-20230711161733110](https://github.com/lijinchao98/digital_pred_func/blob/master/img/image-20230711161733110.png)
+
+![image-20230711161746081](https://github.com/lijinchao98/digital_pred_func/blob/master/img/image-20230711161746081.png)
+
+![image-20230711161755178](https://github.com/lijinchao98/digital_pred_func/blob/master/img/image-20230711161755178.png)
+
+#### Limitations
+
+Only suitable for a few pointer meters, deprecated.
+
+### 2. Key Point Detection
+
+Refer to the following industrial key point detection:
+
+https://github.com/ExileSaber/KeyPoint-Detection/tree/main
+
+https://blog.csdn.net/weixin_41782172/article/details/119249916
+
+UNet, Heatmap, the effect is as follows, this is only part of it, there are actually many types of pointer meters. But changes in resolution, blur, tilt, etc. will affect, require rich data annotation training, poor practicality, deprecated.
+
+![56_7_keypoint](https://github.com/lijinchao98/digital_pred_func/blob/master/img/56_7_keypoint.jpg)
+
+![55_1_keypoint](https://github.com/lijinchao98/digital_pred_func/blob/master/img/55_1_keypoint.jpg)
+
+### 3. Template Matching
+
+Still using the traditional, simple method. Classify which type of pointer meter, use the previously simple marked template for each meter, just extract the pointer, the effect is okay.
+
+When it is used later, there will be changes in light, mirror reflections, and some processing is needed.
+
+## Switch, Lamp Recognition
+
+Just classify it.
+
+## Digital Meter Recognition
+
+The main thing is to detect the decimal point. Some methods on the internet handle the decimal point by treating the position of the decimal point as prior information, such as fixing it somewhere and adding it later.
+
+### 1. CRNN+CTC
+
+Yolo detected the number area in front, recognize the number area.
+
+Refer to https://blog.csdn.net/Enigma_tong/article/details/117735799
+
+https://github.com/Holmeyoung/crnn-pytorch
+
+It is worth noting that during the training of crnn, because we are reading the digital meter, the alphabet is 0123456789. Set the value of nclass in crnn's [lstm](https://so.csdn.net/so/search?q=lstm&spm=1001.2101.3001.7020) to 12=11+1. (Add 1 if there is a negative sign)
+
+Thanks to this author for his patience in replying to me at the time!
+
+![55_1_keypoint](https://github.com/lijinchao98/digital_pred_func/blob/master/img/f29fb379ada8eb77be1fd563eaf5aab.jpg)
+
+The effect is okay. It's just that every time a new type of digital meter is added, a large amount of data needs to be added for training; and there are requirements for data distribution, such as training all around 237, 239, and the recognition becomes 872 data that does not appear, there will be problems.
+
+Also, the Yolo cropping in the first step may not be accurate, which affects subsequent recognition. For example, the digital meter is slightly tilted, and multiple recognition areas are obtained by slightly moving the cropped area up, down, left, and right (rotation can also be considered), for recognition, voting, and abnormal result warnings.
+
+Different digital meter data can be trained together.
+
+The main advantage is simplicity. When annotating, just input the value while looking at the picture. Very good for detecting decimal points. When annotating, manual input may result in erroneous labels, such as hitting extra spaces, and loading data training will report errors, so I wrote a few lines of code to check these.
+
+I've been using this method initially. Later, different types of digital meters were replaced, and different shooting scenes could not provide many training data, so I thought of other methods.
+
+### 2. Yolo+Yolo
+
+For the cropped number recognition area, use another yolo to detect '1', '2', ...'-' and '.'. But Yolo's detection of decimal points may be limited, actually it's okay.
+
+I tried morphological decimal point detection, but for different meters, the resolution threshold is hard to determine.
+
+PS: I think crnn is quite good. How could I want very little training data, and also want to use a model to apply to various different places of different meters....
 # 变电站仪表检测与识别
 
 我的部分数据集：
