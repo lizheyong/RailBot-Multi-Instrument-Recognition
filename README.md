@@ -1,11 +1,11 @@
 <div align="center">
 
-[【English】](#substation-instrument-detection-and-recognition) | [【中文】](#变电站仪表检测与识别)
+[【English】](#substation-instrument-recognition) | [【中文】](#变电站轨道机器人仪表识别)
 
 </div>
 
 
-# Substation Instrument Detection and Recognition
+# Substation Instrument Recognition
 
 My partial dataset:
 
@@ -87,8 +87,6 @@ It is worth noting that during the training of crnn, because we are reading the 
 
 Thanks to this author for his patience in replying to me at the time!
 
-![55_1_keypoint](https://github.com/lijinchao98/digital_pred_func/blob/master/img/f29fb379ada8eb77be1fd563eaf5aab.jpg)
-
 The effect is okay. It's just that every time a new type of digital meter is added, a large amount of data needs to be added for training; and there are requirements for data distribution, such as training all around 237, 239, and the recognition becomes 872 data that does not appear, there will be problems.
 
 Also, the Yolo cropping in the first step may not be accurate, which affects subsequent recognition. For example, the digital meter is slightly tilted, and multiple recognition areas are obtained by slightly moving the cropped area up, down, left, and right (rotation can also be considered), for recognition, voting, and abnormal result warnings.
@@ -106,7 +104,9 @@ For the cropped number recognition area, use another yolo to detect '1', '2', ..
 I tried morphological decimal point detection, but for different meters, the resolution threshold is hard to determine.
 
 PS: I think crnn is quite good. How could I want very little training data, and also want to use a model to apply to various different places of different meters....
-# 变电站仪表检测与识别
+
+
+# 变电站轨道机器人仪表识别
 
 我的部分数据集：
 
@@ -185,8 +185,6 @@ https://github.com/Holmeyoung/crnn-pytorch
 值得注意的事情是，crnn训练的时候，由于我们做的是数字式仪表的读数，所以aphabet为0123456789. 把crnn中[lstm](https://so.csdn.net/so/search?q=lstm&spm=1001.2101.3001.7020)中的nclass的数值设置为12=11+1.（有负号的话再加1）
 
 感谢这个作者当时对我的耐心回复！
-![55_1_keypoint](https://github.com/lijinchao98/digital_pred_func/blob/master/img/f29fb379ada8eb77be1fd563eaf5aab.jpg)
-
 
 效果是可以的。就是每次新类型的数字表，需要大量数据去加进去训练；而且对数据分布也有要求，比如训练的都是237，239这附近的数据，识别的时候缺变成872这种没有出现的数据，就会有问题。
 
