@@ -9,7 +9,7 @@
 
 My partial dataset:
 
-https://lizheyong.com/dataset-substation
+https://blog.lizheyong.com/dataset-substation
 
 ## Preprocessing for the Classification of Various Switches and Meters
 
@@ -110,7 +110,7 @@ PS: I think crnn is quite good. How could I want very little training data, and 
 
 我的部分数据集：
 
-https://lizheyong.com/dataset-substation
+https://blog.lizheyong.com/dataset-substation
 
 ## 预处理对各种仪表开关分类
 
